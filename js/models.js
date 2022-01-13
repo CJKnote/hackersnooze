@@ -24,7 +24,7 @@ class Story {
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
-    // UNIMPLEMENTED: complete this function!
+    return this.url;
     return "hostname.com";
   }
 }
@@ -37,6 +37,7 @@ class Story {
 class StoryList {
   constructor(stories) {
     this.stories = stories;
+    console.log("made a storyList");
   }
 
   /** Generate a new StoryList. It:
@@ -73,8 +74,33 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  async addStory( /* user, newStory */) {
-    // UNIMPLEMENTED: complete this function!
+  async addStory(user, {title, author, url}) {
+    const loggedUser = user.loginToken;
+    //add story data to API
+    const response = await axios({
+      method: "POST", //post is not allowed?? idk if its the user or what the issue is
+      url: `${BASE_URL}/stories`,
+      data: {token: loggedUser , story: {title, author, url}}
+    });
+
+    //makes a story instance with the data
+    let story = response.data.story;
+    //let {story: newStory} = response.data; destructuring
+    console.log(story);
+
+    
+    let addedStory = new Story({
+      storyId : story.storyId,
+      title: story.title,
+      author: story.author,
+      url: story.url,
+      username: user.username,
+      createdAt: user.createdAt
+    });
+
+    //unshift is like push but to the front of the array
+    this.stories.unshift(addedStory);
+    return addedStory;
   }
 }
 
