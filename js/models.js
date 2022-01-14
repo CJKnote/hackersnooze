@@ -83,26 +83,31 @@ class StoryList {
       data: {token: loggedUser , story: {title, author, url}}
     });
 
+   
+
+
     //makes a story instance with the data
     let story = response.data.story;
     //let {story: newStory} = response.data; destructuring
-    console.log(story);
 
-    
-    let addedStory = new Story({
-      storyId : story.storyId,
-      title: story.title,
-      author: story.author,
-      url: story.url,
-      username: user.username,
-      createdAt: user.createdAt
-    });
+    const addedStory = new Story(story);
+    // let addedStory = new Story({
+    //   storyId : story.storyId,
+    //   title: story.title,
+    //   author: story.author,
+    //   url: story.url,
+    //   username: user.username,
+    //   createdAt: user.createdAt
+    // });
 
     //unshift is like push but to the front of the array
     this.stories.unshift(addedStory);
+    user.ownStories.unshift(addedStory);
     return addedStory;
   }
 }
+
+//remove method
 
 
 /******************************************************************************

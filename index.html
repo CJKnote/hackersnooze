@@ -39,6 +39,7 @@
   </div>
   <div class="nav-right">
     <a class="nav-link" href="#" id="nav-login">login/signup</a>
+    <a class="nav-link" href="#" id="nav-submit">submit story</a>
     <a class="nav-link" href="#" id="nav-user-profile"></a>
     <a class="hidden" id="nav-logout" href="#"><small>(logout)</small></a>
   </div>
@@ -46,6 +47,14 @@
 
 <!-- area for stories (all stories, user stories, favorites) -->
 <section class="stories-container container">
+
+  <!-- form for submitting a new story -->
+  <form action = "" class = "hidden" id = "story-submit-form">
+    <input id = "submit-title" placeholder = "title" required>
+    <input id = "submit-author" placeholder = "author" required>
+    <input id = "submit-url" placeholder = "url" required>
+    <button type = "sumbit" id = "submit-btn">Submit story</button>
+  </form>
 
   <!-- loading message (removed by JS after stories loaded) -->
   <div id="stories-loading-msg">Loading&hellip;</div>
