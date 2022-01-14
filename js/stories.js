@@ -23,8 +23,27 @@ function generateStoryMarkup(story) {
   // console.debug("generateStoryMarkup", story);
 
   const hostName = story.getHostName();
+
+  //check if we are logged in.
+  let loggedIn = Boolean(currentUser)
+
+  //filled star or emptu star
+  const faved = "fas fa-star";
+  const unfaved = "far fa-star";
+  let displayStar = "";
+  //if we are logged in, check if the story is faved and then update the star
+  if(loggedIn){
+    const storyFav = currentUser.checkIfFav(story);
+
+    (storyFav ? displayStar = faved : displayStar = unfaved);
+  }
+  
+
   return $(`
       <li id="${story.storyId}">
+        <span class = "star">
+          <i class = "${displayStar}"></i>
+        </span>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -34,6 +53,7 @@ function generateStoryMarkup(story) {
       </li>
     `);
 }
+
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
@@ -73,3 +93,29 @@ async function submitStory(e){
 }
 
 $storySubmitForm.on("submit", submitStory);
+
+async function changeFav(e){
+  console.log(e.target);
+  const target = $(e.target);
+  const line = target.closest("li");
+  const clickedStoryId = line.attr("id");
+  const clickedStory = storyList.stories.find(s=>s.storyId === clickedStoryId);
+
+  //if it was already faved, remove the favorite
+  if(target.hasClass("fas")){
+    await currentUser.removeFav(clickedStory);
+    line.closest("i").toggleClass("fas far");
+  }
+  else{
+   
+    await currentUser.addFav(clickedStory);
+    line.closest("i").toggleClass("far fas");
+  }
+
+
+  //update visuals
+  putStoriesOnPage();
+
+}
+
+$allStoriesList.on("click", ".star", changeFav)

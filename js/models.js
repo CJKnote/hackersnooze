@@ -224,4 +224,50 @@ class User {
       return null;
     }
   }
+
+  /**
+   * 
+   * add a story to favorite list
+   */
+  async addFav(story){
+    this.favorites.push(story);
+
+    const token = this.loginToken;
+    await axios({
+      method: "POST",
+      url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
+      data: {token}
+    });
+  }
+
+  /**
+   * 
+   * deletes a story from the favorite list
+   *  
+   */
+  async removeFav(story){
+    //filter out the story to remove and replace old favorite list with filtered list
+    this.favorites = this.favorites.filter(s => s.storyId !== story.storyId);
+    const token = this.loginToken;
+
+    //remove from API.
+    await axios({
+      method: "DELETE",
+      url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
+      data: {token}
+    });
+  }
+
+
+  /**
+   * checks if a given story is on the user's favorite list.
+   */
+  checkIfFav(story){
+    if(this.favorites.indexOf(story) !== -1){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
 }
