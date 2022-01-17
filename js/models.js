@@ -105,6 +105,27 @@ class StoryList {
     user.ownStories.unshift(addedStory);
     return addedStory;
   }
+
+  //deletes a story
+  async removeStory(story, user){
+    const token = user.loginToken;
+    //remove story from ownStories list
+    user.ownStories = user.ownStories.filter(s=>s.storyId !== story.storyId);
+    //remove story from user's favorites
+    user.removeFav(story);
+
+    //removes story from API
+
+    await axios({
+      method: "DELETE",
+      url: `${BASE_URL}/stories/${story.storyId}`,
+      data: {token}
+    });
+
+    //remove story from storyList
+    this.stories = this.stories.filter(s=>s.storyId!==story.storyId)
+
+  }
 }
 
 //remove method
@@ -131,6 +152,7 @@ class User {
     this.username = username;
     this.name = name;
     this.createdAt = createdAt;
+
 
     // instantiate Story instances for the user's favorites and ownStories
     this.favorites = favorites.map(s => new Story(s));
@@ -256,6 +278,7 @@ class User {
       url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
       data: {token}
     });
+
   }
 
 
@@ -263,11 +286,12 @@ class User {
    * checks if a given story is on the user's favorite list.
    */
   checkIfFav(story){
-    if(this.favorites.indexOf(story) !== -1){
-      return true;
-    }
-    else{
-      return false;
-    }
+    //check if the storyId shows up on the favorites list and returns true if so
+    return this.favorites.some(s=>(s.storyId===story.storyId));
+  }
+
+  //checks if a user posted the story
+  checkIfUserPosted(story){
+    return this.ownStories.some(s=>(s.storyId===story.storyId));
   }
 }

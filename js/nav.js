@@ -42,3 +42,11 @@ function navStorySubmitClick(evt){
 }
 
 $("#nav-submit").on("click", navStorySubmitClick);
+
+function navFavoritesClick(evt){
+  //hide the current info, then display the favorites
+  hidePageComponents();
+  putFavoritesOnPage();
+}
+
+$("#nav-faves").on("click", navFavoritesClick);

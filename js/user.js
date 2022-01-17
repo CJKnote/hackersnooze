@@ -82,6 +82,7 @@ async function checkForRememberedUser() {
   currentUser = await User.loginViaStoredCredentials(token, username);
 }
 
+
 /** Sync current user information to localStorage.
  *
  * We store the username/token in localStorage so when the page is refreshed
@@ -110,6 +111,7 @@ function saveUserCredentialsInLocalStorage() {
 function updateUIOnUserLogin() {
   console.debug("updateUIOnUserLogin");
 
+  putStoriesOnPage();
   $allStoriesList.show();
 
   updateNavOnLogin();
